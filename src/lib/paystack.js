@@ -22,7 +22,7 @@ export async function payForWeek({ userId, email, week, onSuccess, onClose }) {
  const handler = window.PaystackPop.setup({
   key: PAYSTACK_KEY,
   email,
-  amount: WEEKLY_AMOUNT_KES * 80,
+  amount: WEEKLY_AMOUNT_KES * 100,
   currency: 'KES',
   ref,
   metadata: { user_id: userId, week },
