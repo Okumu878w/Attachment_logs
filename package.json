@@ -3,11 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
+ "scripts": {
+  "dev": "vite",
+  "build": "npx vite build",
+  "preview": "npx vite preview"
+},
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "chart.js": "^4.4.0",
