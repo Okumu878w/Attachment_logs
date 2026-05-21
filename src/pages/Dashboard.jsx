@@ -142,6 +142,7 @@ export default function Dashboard({ showToast }) {
       {/* Help contact */}
 <div style={{
   marginTop: '1.5rem',
+  marginBottom: '5rem',
   background: 'white',
   border: '1px solid var(--border)',
   borderRadius: 'var(--radius-lg)',
