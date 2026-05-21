@@ -1,4 +1,8 @@
+
+import React from 'react'
+
 import React, { useState } from 'react'
+
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuth'
 import Sidebar from './components/Sidebar'
@@ -13,6 +17,9 @@ import Entries       from './pages/Entries'
 import WeeklySummary from './pages/WeeklySummary'
 import Payments      from './pages/Payments'
 import Profile       from './pages/Profile'
+
+import Schemes       from './pages/Schemes'
+
 
 function AppShell() {
   const { user, loading } = useAuth()
@@ -46,6 +53,9 @@ function AppShell() {
           <Route path="/weekly"    element={<WeeklySummary showToast={showToast} />} />
           <Route path="/payments"  element={<Payments      showToast={showToast} />} />
           <Route path="/profile"   element={<Profile       showToast={showToast} />} />
+
+          <Route path="/schemes"   element={<Schemes       showToast={showToast} />} />
+
           <Route path="*"          element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </main>
