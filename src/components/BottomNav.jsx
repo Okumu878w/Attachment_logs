@@ -5,13 +5,12 @@ const links = [
   { to: '/dashboard', icon: 'ti-layout-dashboard', label: 'Home' },
   { to: '/new-entry', icon: 'ti-plus',              label: 'New' },
   { to: '/entries',   icon: 'ti-list',              label: 'Entries' },
-<<<<<<< HEAD
-  { to: '/schemes',   icon: 'ti-table',             label: 'Schemes' },
+
+  { to: '/schemes',   icon: 'ti-table',             label: 'CBE' },
   { to: '/payments',  icon: 'ti-credit-card',       label: 'Payments' },
-=======
-  { to: '/payments',  icon: 'ti-credit-card',       label: 'Payments' },
+
   { to: '/profile',   icon: 'ti-user',              label: 'Profile' },
->>>>>>> 10ebc388965faedd4040a4c75a3fb2b43733df69
+
 ]
 
 export default function BottomNav() {

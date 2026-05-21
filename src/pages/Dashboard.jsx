@@ -139,8 +139,7 @@ export default function Dashboard({ showToast }) {
           )
         })}
       </div>
-<<<<<<< HEAD
-=======
+
       {/* Help contact */}
 <div style={{
   marginTop: '1.5rem',
@@ -178,7 +177,7 @@ export default function Dashboard({ showToast }) {
     <i className="ti ti-phone" /> +254 114 950 840
   </a>
 </div>
->>>>>>> 10ebc388965faedd4040a4c75a3fb2b43733df69
+
     </div>
   )
 }

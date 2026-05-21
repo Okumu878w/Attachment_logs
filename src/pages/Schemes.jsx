@@ -6,9 +6,8 @@ import { checkPayment, payForWeek } from '../lib/paystack'
 const WEEKS = Array.from({ length: 12 }, (_, i) => i + 1)
 
 const EMPTY_ROW = {
-  lesson_no: '', major_topic: '', sub_topic: '',
-  objectives: '', teaching_activities: '', learning_activities: '',
-  resources: '', references: '', assessment: '', remarks: ''
+  lesson_no: '', strand: '', sub_strand: '',
+  work_done: '', reflection: ''
 }
 
 export default function Schemes({ showToast }) {
@@ -20,7 +19,7 @@ export default function Schemes({ showToast }) {
   const [paying, setPaying] = useState(false)
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [saved, setSaved] = useState([]) // list of weeks that have schemes
+  const [saved, setSaved] = useState([])
 
   useEffect(() => { loadSavedWeeks() }, [user])
 
@@ -42,12 +41,9 @@ export default function Schemes({ showToast }) {
     if (data && data.length > 0) {
       setDate(data[0].date || '')
       setRows(data.map(d => ({
-        lesson_no: d.lesson_no || '', major_topic: d.major_topic || '',
-        sub_topic: d.sub_topic || '', objectives: d.objectives || '',
-        teaching_activities: d.teaching_activities || '',
-        learning_activities: d.learning_activities || '',
-        resources: d.resources || '', references: d.references || '',
-        assessment: d.assessment || '', remarks: d.remarks || ''
+        lesson_no: d.lesson_no || '', strand: d.strand || '',
+        sub_strand: d.sub_strand || '', work_done: d.work_done || '',
+        reflection: d.reflection || ''
       })))
     } else {
       setDate('')
@@ -72,7 +68,7 @@ export default function Schemes({ showToast }) {
     try {
       await payForWeek({
         userId: user.id, email: user.email, week: parseInt(week),
-        onSuccess: () => { setPaymentOk(true); showToast('Payment confirmed! You can now save Week ' + week + ' scheme') },
+        onSuccess: () => { setPaymentOk(true); showToast('Payment confirmed! You can now save Week ' + week + ' record') },
         onClose: () => setPaying(false),
       })
     } catch (err) {
@@ -84,7 +80,6 @@ export default function Schemes({ showToast }) {
     if (!week) { showToast('Select a week first', 'warning'); return }
     if (!paymentOk) { showToast('Please pay for Week ' + week + ' first', 'warning'); return }
     setSaving(true)
-    // Delete existing rows for this week then reinsert
     await supabase.from('schemes').delete().eq('user_id', user.id).eq('week', parseInt(week))
     const payload = rows.map((r, i) => ({
       user_id: user.id, week: parseInt(week), date, row_index: i, ...r
@@ -92,7 +87,7 @@ export default function Schemes({ showToast }) {
     const { error } = await supabase.from('schemes').insert(payload)
     setSaving(false)
     if (error) { showToast('Error: ' + error.message, 'error'); return }
-    showToast('Week ' + week + ' scheme saved!')
+    showToast('Week ' + week + ' record saved!')
     loadSavedWeeks()
   }
 
@@ -102,37 +97,33 @@ export default function Schemes({ showToast }) {
       .eq('user_id', user.id)
       .in('week', weeksToExport)
       .order('week').order('row_index')
-    if (!data || data.length === 0) { showToast('No scheme data found for selected weeks', 'warning'); return }
+    if (!data || data.length === 0) { showToast('No record data found for selected weeks', 'warning'); return }
 
-    // Group by week
     const byWeek = {}
     data.forEach(r => { if (!byWeek[r.week]) byWeek[r.week] = []; byWeek[r.week].push(r) })
 
     const name = profile?.full_name || user?.email?.split('@')[0] || ''
     const school = profile?.institution || ''
+    const grade = profile?.grade || ''
+    const learningArea = profile?.learning_area || ''
 
     const cols = [
-      { key: 'lesson_no', label: 'LSN No.', w: '5%' },
-      { key: 'major_topic', label: 'Major Topic', w: '10%' },
-      { key: 'sub_topic', label: 'Sub-Topic', w: '10%' },
-      { key: 'objectives', label: 'Objectives', w: '12%' },
-      { key: 'teaching_activities', label: 'Teaching Activities', w: '12%' },
-      { key: 'learning_activities', label: 'Learning Activities', w: '12%' },
-      { key: 'resources', label: 'T/L Resources', w: '10%' },
-      { key: 'references', label: 'References', w: '10%' },
-      { key: 'assessment', label: 'Assessment', w: '10%' },
-      { key: 'remarks', label: 'Remarks', w: '9%' },
+      { key: 'lesson_no', label: 'Lesson No.', w: '8%' },
+      { key: 'strand', label: 'Strand', w: '18%' },
+      { key: 'sub_strand', label: 'Sub Strand', w: '18%' },
+      { key: 'work_done', label: 'Work Done / Skills Learned', w: '30%' },
+      { key: 'reflection', label: 'Reflection', w: '18%' },
     ]
 
     let html = `<!DOCTYPE html><html><head><meta charset="UTF-8"/>
-<title>Schemes of Work</title>
+<title>CBE Record of Work</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; font-size: 9pt; color: #000; }
   .page { padding: 12mm; page-break-after: always; }
   .page:last-child { page-break-after: avoid; }
   h2 { font-size: 13pt; text-align: center; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
-  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; font-size: 9pt; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 10px; font-size: 9pt; }
   .meta-item { display: flex; gap: 4px; }
   .meta-item label { font-weight: bold; }
   table { width: 100%; border-collapse: collapse; }
@@ -141,6 +132,7 @@ export default function Schemes({ showToast }) {
   td.week-col { text-align: center; font-weight: bold; background: #f5f5f0; }
   tr:nth-child(even) td { background: #fafaf8; }
   tr:nth-child(even) td.week-col { background: #f0f0ea; }
+  .sig-col { text-align: center; }
   @media print {
     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .no-print { display: none; }
@@ -150,24 +142,28 @@ export default function Schemes({ showToast }) {
     Object.entries(byWeek).forEach(([w, wRows]) => {
       const wDate = wRows[0]?.date || ''
       html += `<div class="page">
-  <h2>Schemes of Work</h2>
+  <h2>CBE Record of Work</h2>
   <div class="meta">
-    <div class="meta-item"><label>Name:</label><span>${name}</span></div>
-    <div class="meta-item"><label>Institution:</label><span>${school}</span></div>
+    <div class="meta-item"><label>Name of Teacher:</label><span>${name}</span></div>
+    <div class="meta-item"><label>School:</label><span>${school}</span></div>
+    ${grade ? `<div class="meta-item"><label>Grade:</label><span>${grade}</span></div>` : ''}
+    ${learningArea ? `<div class="meta-item"><label>Learning Area:</label><span>${learningArea}</span></div>` : ''}
     <div class="meta-item"><label>Week:</label><span>${w}</span></div>
     ${wDate ? `<div class="meta-item"><label>Date:</label><span>${wDate}</span></div>` : ''}
   </div>
   <table>
     <thead><tr>
       <th style="width:5%">WEEK</th>
-      <th style="width:5%">DATE</th>
-      ${cols.map(c => `<th style="width:${c.w}">${c.label}</th>`).join('')}
+      <th style="width:7%">DATE</th>
+      ${cols.map(c => `<th style="width:${c.w}">${c.label.toUpperCase()}</th>`).join('')}
+      <th style="width:8%">SIGNATURE</th>
     </tr></thead>
     <tbody>`
       wRows.forEach((r, i) => {
         html += `<tr>
-        ${i === 0 ? `<td class="week-col" rowspan="${wRows.length}">${w}</td><td rowspan="${wRows.length}">${wDate}</td>` : ''}
+        ${i === 0 ? `<td class="week-col" rowspan="${wRows.length}">${w}</td><td rowspan="${wRows.length}" style="text-align:center">${wDate}</td>` : ''}
         ${cols.map(c => `<td>${r[c.key] || ''}</td>`).join('')}
+        <td class="sig-col">&nbsp;</td>
       </tr>`
       })
       html += `</tbody></table></div>`
@@ -184,24 +180,19 @@ export default function Schemes({ showToast }) {
   const weekChecking = paymentOk === null && week
 
   const cols = [
-    { key: 'lesson_no', label: 'LSN No.', w: 60 },
-    { key: 'major_topic', label: 'Major Topic', w: 120 },
-    { key: 'sub_topic', label: 'Sub-Topic', w: 120 },
-    { key: 'objectives', label: 'Objectives', w: 140 },
-    { key: 'teaching_activities', label: 'Teaching Activities', w: 140 },
-    { key: 'learning_activities', label: 'Learning Activities', w: 140 },
-    { key: 'resources', label: 'T/L Resources', w: 110 },
-    { key: 'references', label: 'References', w: 110 },
-    { key: 'assessment', label: 'Assessment', w: 110 },
-    { key: 'remarks', label: 'Remarks', w: 100 },
+    { key: 'lesson_no', label: 'Lesson No.', w: 80 },
+    { key: 'strand', label: 'Strand', w: 160 },
+    { key: 'sub_strand', label: 'Sub Strand', w: 160 },
+    { key: 'work_done', label: 'Work Done / Skills Learned', w: 220 },
+    { key: 'reflection', label: 'Reflection', w: 160 },
   ]
 
   return (
     <div>
       {/* Header */}
       <div style={{ marginBottom: '1.75rem' }}>
-        <h1 style={{ fontFamily: 'Playfair Display,serif', fontSize: 28, fontWeight: 400 }}>Schemes of Work</h1>
-        <div style={{ fontSize: 14, color: 'var(--ink-light)', marginTop: 3 }}>Enter and manage your weekly teaching schemes</div>
+        <h1 style={{ fontFamily: 'Playfair Display,serif', fontSize: 28, fontWeight: 400 }}>CBE Record of Work</h1>
+        <div style={{ fontSize: 14, color: 'var(--ink-light)', marginTop: 3 }}>Enter and manage your weekly CBE records</div>
       </div>
 
       {/* Week selector + date */}
@@ -233,7 +224,7 @@ export default function Schemes({ showToast }) {
       )}
       {weekPaid && (
         <div style={{ background: 'var(--green-light)', border: '1px solid rgba(22,101,52,0.2)', borderRadius: 'var(--radius)', padding: '10px 14px', fontSize: 13, color: 'var(--green)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <i className="ti ti-circle-check-filled" /> Week {week} payment confirmed — you can save this scheme.
+          <i className="ti ti-circle-check-filled" /> Week {week} payment confirmed — you can save this record.
         </div>
       )}
       {weekUnpaid && (
@@ -241,7 +232,7 @@ export default function Schemes({ showToast }) {
           <div style={{ fontWeight: 600, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 6 }}>
             <i className="ti ti-lock" /> Week {week} not paid
           </div>
-          <div style={{ marginBottom: 10 }}>Pay <strong>KES 40</strong> to save the scheme for Week {week}.</div>
+          <div style={{ marginBottom: 10 }}>Pay <strong>KES 40</strong> to save the record for Week {week}.</div>
           <button type="button" className="btn btn-green btn-sm" onClick={handlePay} disabled={paying}>
             <i className="ti ti-credit-card" /> {paying ? 'Opening…' : 'Pay KES 40 via Paystack'}
           </button>
@@ -263,6 +254,7 @@ export default function Schemes({ showToast }) {
                       {cols.map(c => (
                         <th key={c.key} style={{ ...thStyle, width: c.w, minWidth: c.w }}>{c.label}</th>
                       ))}
+                      <th style={{ ...thStyle, width: 80 }}>Signature</th>
                       <th style={{ ...thStyle, width: 40 }}></th>
                     </tr>
                   </thead>
@@ -280,6 +272,7 @@ export default function Schemes({ showToast }) {
                             />
                           </td>
                         ))}
+                        <td style={{ ...tdStyle, textAlign: 'center', color: 'var(--ink-faint)', fontSize: 11 }}>—</td>
                         <td style={{ ...tdStyle, textAlign: 'center' }}>
                           <button onClick={() => removeRow(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-faint)', fontSize: 16, padding: 4 }} title="Remove row">
                             <i className="ti ti-trash" />
@@ -298,7 +291,7 @@ export default function Schemes({ showToast }) {
                 </button>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button onClick={handleSave} className="btn btn-primary btn-sm" disabled={saving || !paymentOk}>
-                    <i className="ti ti-device-floppy" /> {saving ? 'Saving…' : 'Save Scheme'}
+                    <i className="ti ti-device-floppy" /> {saving ? 'Saving…' : 'Save Record'}
                   </button>
                 </div>
               </div>
@@ -312,10 +305,10 @@ export default function Schemes({ showToast }) {
         <div className="card">
           <h3 style={{ fontSize: 15, fontWeight: 500, marginBottom: '1rem' }}>
             <i className="ti ti-file-type-pdf" style={{ color: 'var(--gold)', marginRight: 6 }} />
-            Export Scheme PDF
+            Export Record PDF
           </h3>
           <p style={{ fontSize: 13, color: 'var(--ink-light)', marginBottom: '1rem' }}>
-            Generate a printable PDF of your schemes. Select one or more weeks.
+            Generate a printable PDF of your CBE records. Select one or more weeks.
           </p>
           <PDFExport saved={saved} onExport={generatePDF} />
         </div>
@@ -324,7 +317,7 @@ export default function Schemes({ showToast }) {
       {!week && saved.length === 0 && (
         <div className="empty">
           <i className="ti ti-table" />
-          <p>Select a week above to start filling in your scheme of work.</p>
+          <p>Select a week above to start filling in your CBE record of work.</p>
         </div>
       )}
     </div>
