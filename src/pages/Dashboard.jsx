@@ -173,7 +173,7 @@ export default function Dashboard({ showToast }) {
     border: '1px solid rgba(15,118,110,0.2)',
     transition: 'all .15s',
   }}>
-    <i className="ti ti-phone" /> 0114 950 840
+    <i className="ti ti-phone" /> +254 114 950 840
   </a>
 </div>
     </div>
