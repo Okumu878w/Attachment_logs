@@ -1,8 +1,8 @@
-<<<<<<< HEAD
+
 import React from 'react'
-=======
+
 import React, { useState } from 'react'
->>>>>>> 10ebc388965faedd4040a4c75a3fb2b43733df69
+
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuth'
 import Sidebar from './components/Sidebar'
