@@ -7,7 +7,10 @@ const links = [
   { to: '/dashboard',  icon: 'ti-layout-dashboard', label: 'Dashboard' },
   { to: '/new-entry',  icon: 'ti-plus',              label: 'New Entry' },
   { to: '/entries',    icon: 'ti-list',              label: 'All Entries' },
+<<<<<<< HEAD
   { to: '/schemes',    icon: 'ti-table',             label: 'Schemes of Work' },
+=======
+>>>>>>> 10ebc388965faedd4040a4c75a3fb2b43733df69
   { to: '/weekly',     icon: 'ti-calendar-week',     label: 'Weekly Summary' },
   { to: '/payments',   icon: 'ti-credit-card',       label: 'Payments' },
   { to: '/profile',    icon: 'ti-user',              label: 'Profile' },
@@ -31,6 +34,10 @@ export default function Sidebar() {
       display: 'flex', flexDirection: 'column',
       padding: '1.5rem 1rem', overflowY: 'auto',
     }}>
+<<<<<<< HEAD
+=======
+      {/* Logo */}
+>>>>>>> 10ebc388965faedd4040a4c75a3fb2b43733df69
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: '2rem', padding: '0 0.5rem' }}>
         <div style={{ width: 34, height: 34, background: 'rgba(255,255,255,0.12)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <i className="ti ti-notebook" style={{ fontSize: 16 }} />
@@ -38,6 +45,10 @@ export default function Sidebar() {
         <span style={{ fontFamily: 'Playfair Display, serif', fontSize: 18 }}>AttachLog</span>
       </div>
 
+<<<<<<< HEAD
+=======
+      {/* Nav */}
+>>>>>>> 10ebc388965faedd4040a4c75a3fb2b43733df69
       <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', padding: '0 0.75rem', marginBottom: 6 }}>Menu</div>
       {links.map(({ to, icon, label }) => (
         <NavLink key={to} to={to} style={({ isActive }) => ({
@@ -46,7 +57,12 @@ export default function Sidebar() {
           fontSize: 14, fontWeight: isActive ? 500 : 400,
           color: isActive ? 'white' : 'rgba(255,255,255,0.6)',
           background: isActive ? 'rgba(255,255,255,0.12)' : 'transparent',
+<<<<<<< HEAD
           textDecoration: 'none', transition: 'all .15s', marginBottom: 2,
+=======
+          textDecoration: 'none', transition: 'all .15s',
+          marginBottom: 2,
+>>>>>>> 10ebc388965faedd4040a4c75a3fb2b43733df69
         })}>
           <i className={`ti ${icon}`} style={{ fontSize: 17 }} />
           {label}
@@ -67,6 +83,10 @@ export default function Sidebar() {
         <i className="ti ti-logout" style={{ fontSize: 17 }} /> Sign out
       </button>
 
+<<<<<<< HEAD
+=======
+      {/* User */}
+>>>>>>> 10ebc388965faedd4040a4c75a3fb2b43733df69
       <div style={{ marginTop: 'auto', padding: 12, borderRadius: 10, background: 'rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: 10 }}>
         <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'var(--gold-mid)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600, color: 'white', flexShrink: 0 }}>
           {initials}

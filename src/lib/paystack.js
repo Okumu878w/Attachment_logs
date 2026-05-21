@@ -70,4 +70,8 @@ export async function getUserPayments(userId) {
     .eq('user_id', userId)
     .order('week', { ascending: true })
   return data || []
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 10ebc388965faedd4040a4c75a3fb2b43733df69
