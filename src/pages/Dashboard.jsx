@@ -139,6 +139,42 @@ export default function Dashboard({ showToast }) {
           )
         })}
       </div>
+      {/* Help contact */}
+<div style={{
+  marginTop: '1.5rem',
+  background: 'white',
+  border: '1px solid var(--border)',
+  borderRadius: 'var(--radius-lg)',
+  padding: '1rem 1.25rem',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: 12,
+}}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+    <div style={{
+      width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+      background: 'var(--teal-light)', color: 'var(--teal)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
+    }}>
+      <i className="ti ti-headset" />
+    </div>
+    <div>
+      <div style={{ fontSize: 13, fontWeight: 600 }}>Need help?</div>
+      <div style={{ fontSize: 12, color: 'var(--ink-light)' }}>We're here to assist you</div>
+    </div>
+  </div>
+  <a href="tel:0114950840" style={{
+    display: 'inline-flex', alignItems: 'center', gap: 6,
+    padding: '7px 14px', borderRadius: 8,
+    background: 'var(--teal-light)', color: 'var(--teal)',
+    fontSize: 13, fontWeight: 600, textDecoration: 'none',
+    border: '1px solid rgba(15,118,110,0.2)',
+    transition: 'all .15s',
+  }}>
+    <i className="ti ti-phone" /> 0114 950 840
+  </a>
+</div>
     </div>
   )
 }
